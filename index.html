@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Resize Cards Test</title>
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body>
+        <div class="buttons">
+            <button class="add-card-all">Add card to all</button
+            ><button class="remove-card-all">Remove a card from all</button
+            ><button class="card-size-up">bigger</button
+            ><button class="card-size-down">smaller</button>
+        </div>
+        <div id="card-table">
+            <div class="opponent-player seat">
+                <div class="player">
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div class="stack money">$100</div>
+                </div>
+            </div>
+            <div class="opponent-player seat">
+                <div class="player">
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div class="stack money">$100</div>
+                </div>
+            </div>
+            <div class="opponent-player seat">
+                <div class="player">
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div class="stack money">$100</div>
+                </div>
+            </div>
+            <div class="opponent-player seat">
+                <div class="player">
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div class="stack money">$100</div>
+                </div>
+            </div>
+            <!-- Pot Area -->
+            <div class="pot-area no-select seat">
+                <p class="title">CENTER</p>
+                <div class="pot-amount money">
+                    <span class="num">$100</span>
+                </div>
+
+                <div id="community-hand" class="hand-holder player">
+                    <div class="cards"></div>
+                    <div class="bottom-info"></div>
+                </div>
+            </div>
+            <!-- end pot-area -->
+            <div class="opponent-player seat">
+                <div class="player">
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div class="stack money">$100</div>
+                </div>
+            </div>
+            <div class="opponent-player seat">
+                <div class="player">
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div class="stack money">$100</div>
+                </div>
+            </div>
+            <div class="opponent-player seat">
+                <div class="player">
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div class="stack money">$100</div>
+                </div>
+            </div>
+            <!-- Client Player Section -->
+            <div class="client-player seat">
+                <div class="player">
+                    <!-- <p class="your-turn-bug hidden">
+                        <span class="your-turn-text">YOUR TURN</span>
+                        <span class="dot">⏺</span>
+                    </p> -->
+                    <div class="top-info">
+                        <h3 class="player-name">Player 1</h3>
+                    </div>
+                    <div class="cards"></div>
+                    <div class="bottom-info">
+                        <p class="hand-name">Hand Name</p>
+                    </div>
+                    <div id="player-controls">
+                        <p class="instructions">INSTRUCTIONS HERE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="module" src="./main.js"></script>
+</html>

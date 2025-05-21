@@ -1,0 +1,299 @@
+:root {
+    --card-width: 6vw;
+}
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid orange;
+    height: 100vh;
+}
+
+/* =========================================================== */
+/* 
+//  Player Name
+*/
+/* =========================================================== */
+.player-name,
+.hand-name {
+    font-size: min(36px, calc(10px + var(--card-width) * 0.1));
+    margin: 0;
+}
+.hand-name {
+    font-size: min(26px, calc(7px + var(--card-width) * 0.05));
+}
+
+/* =========================================================== */
+/* 
+//  CARD
+*/
+/* =========================================================== */
+
+.card {
+    position: relative;
+    width: var(--card-width);
+    aspect-ratio: 1/1.4;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    background-color: pink;
+    border-radius: calc(var(--card-width) * 0.1);
+    box-shadow: inset 0 0 4vmin 0 rgba(0, 0, 0, 0.25),
+        inset 0 0 4vmin 0 rgba(0, 0, 0, 0.25);
+}
+
+.opponent-player .card,
+#community-hand .card {
+    width: var(--card-width);
+}
+
+.cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--card-width) * 0.1);
+    flex-wrap: wrap;
+    height: auto;
+    margin-top: 0.3em;
+}
+
+/* =========================================================== */
+/* 
+//  CARD TABLE
+*/
+/* =========================================================== */
+
+#card-table {
+    box-sizing: border-box;
+    padding: 2vmin;
+    display: grid;
+    /* justify-content: space-between; */
+    justify-items: stretch;
+    align-content: space-between;
+    /* align-items: stretch; */
+    /* grid-template-columns: 1fr 2fr 1fr; */
+    grid-template-columns: repeat(3, minmax(min-content, 100%));
+    /* grid-template-rows: 1fr 1fr 1fr 2fr; */
+    grid-template-rows: repeat(3, minmax(0, auto)) 1fr;
+    column-gap: 0;
+    row-gap: 0;
+    grid-template-areas:
+        ". . ."
+        ". pot ."
+        ". pot ."
+        "client-player client-player client-player";
+
+    /* height: 100vh; */
+    flex-grow: 2;
+    /* border: 2px solid pink; */
+    /* background-color: var(--table-color); */
+    /* box-shadow: inset 0 0 8vmin 0 rgba(0, 0, 0, 0.3); */
+}
+
+.seat {
+    /* container-type: inline-size;
+    container-name: seat; */
+    container: seat / size;
+    box-sizing: border-box;
+    width: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: calc(0.25rem + var(--card-width) / 6);
+    margin: 0.25rem;
+    border: 1px solid tan;
+
+    /* background: radial-gradient(
+        closest-side,
+        rgba(6, 36, 8, 0.5) 0,
+        transparent 70%
+    ); */
+    & .player {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        /* container: cards / size; */
+        border: 1px solid pink;
+        & .cards {
+            width: fit-content;
+            /* container: cards / size; */
+        }
+    }
+    & .index-temp {
+        border: 1px solid orange;
+        font-family: monospace;
+        font-size: 0.8rem;
+        text-align: center;
+        color: yellow;
+    }
+
+    & .bottom-info {
+        /* border:1px solid red; */
+        & .size-display {
+            /* border: 1px solid orange; */
+            background-color: #ffccaa;
+        }
+    }
+}
+
+.seat.folded > *:not(#player-controls) {
+    /* don't dim sit-out button, or any other controls */
+    filter: opacity(0.5);
+}
+
+/* .seat.folded { */
+/* background: black; */
+/* filter: grayscale(80%); */
+/* } */
+/* .seat.folded::after {
+    content: "";
+    background-color: var(--table-color);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+} */
+.seat .stack {
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: calc(12px + var(--card-unit));
+    font-weight: bold;
+}
+#dealer-button {
+    position: absolute;
+    --my-unit: calc(8px + var(--card-unit) * 2);
+    width: var(--my-unit);
+    height: var(--my-unit);
+    border-radius: calc(var(--my-unit) * 0.5);
+    background-color: #222;
+    font-size: calc(var(--my-unit) * 0.5);
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    line-height: var(--my-unit);
+    color: #ccc;
+    transform: translateY(-50%);
+    box-shadow: 0.1em 0.2em 1em -0.2em black;
+    top: -100px;
+    left: -100px;
+    transition: top 0.7s, left 1s;
+    z-index: 1000;
+}
+
+.seat .timer-bar {
+    height: 1.5vh;
+
+    background: linear-gradient(
+        red 5%,
+        orange,
+        yellow,
+        green 40%,
+        dodgerblue,
+        blue,
+        purple 90%
+    );
+    width: 100%;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-color: #00000077;
+    border-width: 2px;
+    border-color: #00000055 #ffffff55 #ffffff77;
+    border-radius: 0.8rem;
+    box-shadow: inset 0 0.4rem 0.6rem -0.4rem black,
+        0 -0.25rem 0.5rem -0.25rem black, 0 0.25rem 0.5rem -0.25rem white;
+    z-index: 990;
+}
+.seat.client-player .timer-bar {
+    height: 1rem;
+}
+
+.seat .turns-time-total-meter {
+    color: var(--table-color-light);
+    text-shadow: 0 0 0.1em black, 0 0 0.1em black;
+    font-family: monospace;
+    padding-top: 2px;
+    padding-left: 0.25rem;
+    z-index: 990;
+    & span {
+        /* padding: 0 0.25ch; */
+        color: var(--table-color-light);
+    }
+}
+
+/* 
+
+POT AREA
+
+*/
+
+#card-table .pot-area {
+    position: relative;
+    grid-column: 2;
+    grid-row: 2 / 4;
+    text-align: center;
+    border-radius: 2em;
+    /* border: 2px solid green; */
+    --card-unit: 1.4vmin;
+    padding: 0;
+    margin: 1vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 4vmin 0 rgba(0, 0, 0, 0.25),
+        inset 0 0 4vmin 0 rgba(0, 0, 0, 0.25);
+}
+
+.client-player {
+    grid-area: client-player;
+    grid-column: 1/4;
+    /* border: 2px solid blue; */
+}
+.seat.client-player {
+    --card-unit: min(1.5vmin, 13px);
+    border-radius: 0.5em;
+    /* overflow: hidden; */
+    --pad-unit: min(1em, 1vh);
+    padding: var(--pad-unit) var(--pad-unit) calc(var(--pad-unit) * 2);
+}
+
+/* =========================================================== */
+/*
+//  CONTAINER QUERIES
+*/
+/* =========================================================== */
+/* @container seat (  width > 20px) { */
+    @container seat   (max-width: 2000px) or (min-aspect-ratio: 1 / 1) {
+    .card {
+        font-size: 2em;
+        border: 2px solid red;
+        background-color: lime;
+    }
+    .player {
+        color: red;
+    }
+}
+
+/* @container cards (max-width: 50%) {
+    .card {
+        border: 2px solid lime;
+    }
+  } */
