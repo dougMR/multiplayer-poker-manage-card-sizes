@@ -21,11 +21,13 @@ body {
 /* =========================================================== */
 .player-name,
 .hand-name {
-    font-size: min(36px, calc(10px + var(--card-width) * 0.1));
-    margin: 0;
+    /* font-size: min(36px, calc(10px + var(--card-width) * 0.1));
+    margin: 0; */
+    font-size: 1em;
 }
 .hand-name {
-    font-size: min(26px, calc(7px + var(--card-width) * 0.05));
+    /* font-size: min(26px, calc(7px + var(--card-width) * 0.05)); */
+    font-size: 0.8em;
 }
 
 /* =========================================================== */
@@ -40,12 +42,12 @@ body {
 } */
 
 .cards {
-    border: 1px solid fuchsia;
+    border: 1px solid pink;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 0.3vmin;
+    gap: calc(var(--card-width) * 0.1);
     flex-wrap: wrap;
     height: auto;
     margin-top: 0.3em;
@@ -109,17 +111,17 @@ body {
 
 #card-table {
     box-sizing: border-box;
-    padding: 2vmin;
+    padding: 0;
     display: grid;
     /* justify-content: space-between; */
     justify-items: stretch;
     align-content: space-between;
     /* align-items: stretch; */
-    /* grid-template-columns: 1fr 2fr 1fr; */
-    grid-template-columns: repeat(3, minmax(min-content, auto));
+    grid-template-columns: 33.3% 33.3% 33.3%;
+    /* grid-template-columns: repeat(3, minmax(min-content, auto)); */
     /* grid-template-rows: 1fr 1fr 1fr 2fr; */
     /* grid-template-rows: repeat(3, minmax(0px, 2fr)) 3fr; */
-    grid-template-rows: repeat(3, minmax(min-content, max-content)) minmax(
+    grid-template-rows: repeat(3, minmax(min-content, 1fr)) minmax(
             min-content,
             100%
         );
@@ -134,6 +136,8 @@ body {
 
     /* height: 100vh; */
     flex-grow: 2;
+    position: relative;
+    box-sizing: border-box;
     /* border: 2px solid pink; */
     /* background-color: var(--table-color); */
     /* box-shadow: inset 0 0 8vmin 0 rgba(0, 0, 0, 0.3); */
@@ -150,12 +154,14 @@ body {
     box-sizing: border-box;
     width: auto;
     height: auto;
-    /* display: flex; */
-    /* flex-direction: column;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center; */
+    align-items: center;
     /* position: relative; */
-    padding: calc(0.25rem + var(--card-width) / 6);
+    /* padding: calc(0.25rem + var(--card-width) / 6);
+     */
+     padding: 1em;
     margin: 0;
     border: 1px solid tan;
 
@@ -164,12 +170,13 @@ body {
         rgba(6, 36, 8, 0.5) 0,
         transparent 70%
     ); */
+    box-sizing: border-box;
 
-    & > .seat-inner-container {
+    /* & > .seat-inner-container {
         border: 2px solid chartreuse;
         container: seat / size;
         height: 100%;
-    }
+    } */
     &:has(.hand-holder.hidden){
         border: 2px solid red !important;
         width: 0;
@@ -183,10 +190,11 @@ body {
         width: 100%;
         /* height: 100%; */
         /* container: cards / size; */
-        border: 1px solid teal;
+        border: 1px solid rgb(139, 255, 203);
         & .bottom-info {
             /* border:1px solid red; */
             & .size-display {
+                font-size: 0.7em;
                 /* border: 1px solid orange; */
                 background-color: #ffccaa;
             }
@@ -235,7 +243,8 @@ body {
     margin: 0;
     padding: 0;
     text-align: center;
-    font-size: calc(12px + var(--card-unit));
+    /* font-size: calc(12px + var(--card-unit)); */
+    font-size: 1em;
     font-weight: bold;
 }
 #dealer-button {
@@ -326,7 +335,7 @@ POT AREA
 .client-player {
     grid-area: client-player;
     grid-column: 1/4;
-    margin-top: 1em;
+    /* margin-top: 1em; */
 
     /* border: 2px solid blue; */
 }
@@ -384,10 +393,18 @@ POT AREA
     .seat.horizontal-layout > .hand-holder {
         flex-direction: row;
         justify-content: center;
-        gap: calc(var(--card-width) * 0.3);
-        & > .stack {
+        /* gap: calc(var(--card-width) * 0.3); */
+        /* & > .bottom-info > .stack {
             width: auto;
+        } */
+        & > .cards {
+            /* flex: 2 1 auto; */
+            width: 100%;
         }
+        /* & > .top-info,
+        & > .bottom-info {
+            flex: 1 2 auto;
+        } */
         & > * {
             text-align: center;
         }
