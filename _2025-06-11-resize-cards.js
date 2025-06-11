@@ -29,7 +29,7 @@ const getCardsAcrossAndNumRows = (args) => {
         }
     */
 
-    // console.log("getCardsAcrossAndNumRows()", args);
+    console.log("getCardsAcrossAndNumRows()", args);
 
     const seatEl = args.seatEl;
     let cardPlusGapWidth, containerWidth, numItems, gapSize;
@@ -112,179 +112,44 @@ const getCardsAcrossAndNumRows = (args) => {
 */
 //
 
-function getNumberOfRows(container) {
-    if (!container || !container.children) {
-        return 0;
-    }
-
-    const items = Array.from(container.children);
-    if (items.length === 0) {
-        return 0;
-    }
-    let baseOffset = items[0].offsetTop;
-    let numberOfRows = 1; // Start with 1 row
-
-    items.forEach((item) => {
-        if (item.offsetTop > baseOffset) {
-            baseOffset = item.offsetTop;
-            numberOfRows++;
-        }
-    });
-    return numberOfRows;
-}
-
-const getWidestWordWidth = (element) => {
+const findWidestWord = (element) => {
     // get widest word in element
-    // return px width of widest word in element
 
     // get element's font styles
     const elStyle = getComputedStyle(element);
-    // console.log("elStyle:",elStyle);
     // const fontFamily = elStyle.fontFamily;
     // const fontSize = elStyle.fontSize;
     // const fontWeight = elStyle.fontWeight;
     // const letterSpacing = elStyle.letterSpacing;
 
     const text = element.textContent; // Get the text content
-    const words = text.trim().split(/\s+/); // Split into words
+    const words = text.split(/\s+/); // Split into words
 
     let widestWord = ""; // Initialize the widest word
     let maxWidth = 0; // Initialize the maximum width
 
-    const tempSpan = document.createElement("span"); // Create a temporary span
-    // set its font styles to match element's
-    tempSpan.style.fontFamily = elStyle.getPropertyValue("font-family");
-    tempSpan.style.fontSize = elStyle.getPropertyValue("font-size");
-    tempSpan.style.fontWeight = elStyle.getPropertyValue("font-weight");
-    tempSpan.style.letterSpacing = elStyle.getPropertyValue("letter-spacing");
-    tempSpan.style.fontStyle = elStyle.getPropertyValue("font-style");
-    tempSpan.style.display = "inline-block"; // Ensure it's measured correctly
-    tempSpan.style.width = "fit-content";
-    document.body.appendChild(tempSpan); // Add to the body
-
     // Iterate through each word
     for (const word of words) {
+        const tempSpan = document.createElement("span"); // Create a temporary span
+
+        // set its font styles
+        tempSpan.style.fontFamily = elStyle.fontFamily;
+        tempSpan.style.fontSize = elStyle.fontSize;
+        tempSpan.style.fontWeight = elStyle.fontWeight;
+        tempSpan.style.letterSpacing = elStyle.letterSpacing;
+
         tempSpan.textContent = word; // Set its text
-
-        // console.log(
-        //     "tempSpan:",
-        //     tempSpan,
-        //     tempSpan.offsetWidth,
-        //     "[" + getComputedStyle(tempSpan).getPropertyValue("width") + "]"
-        // );
+        document.body.appendChild(tempSpan); // Add to the body
+        tempSpan.style.display = "inline-block"; // Ensure it's measured correctly
         const width = tempSpan.offsetWidth; // Get the width
-
+        tempSpan.remove(); // Remove the span
         // Update if the current word is wider than the current maximum
         if (width > maxWidth) {
             maxWidth = width;
             widestWord = word;
         }
     }
-    tempSpan.remove(); // Remove the span
-    return maxWidth; // widestWord;
-};
-
-const getElementMargins = (el) => {
-    if (!el || el === undefined)
-        return {
-            horizontal: 0,
-            vertical: 0,
-        };
-    const elStyle = getComputedStyle(el);
-    if (
-        elStyle.display === "none" ||
-        elStyle.position === "absolute" ||
-        elStyle.position === "fixed"
-    )
-        return {
-            horizontal: 0,
-            vertical: 0,
-        };
-
-    const topMargin = parseFloat(elStyle.getPropertyValue("margin-top"));
-    const bottomMargin = parseFloat(elStyle.getPropertyValue("margin-bottom"));
-    const leftMargin = parseFloat(elStyle.getPropertyValue("margin-left"));
-    const rightMargin = parseFloat(elStyle.getPropertyValue("margin-right"));
-    if (
-        topMargin === undefined ||
-        bottomMargin === undefined ||
-        leftMargin === undefined ||
-        rightMargin === undefined
-    ) {
-        console.log(
-            "left,top,right,bottom margin:",
-            leftMargin,
-            topMargin,
-            rightMargin,
-            bottomMargin
-        );
-    }
-
-    return {
-        horizontal: leftMargin + rightMargin,
-        vertical: topMargin + bottomMargin,
-    };
-};
-
-const getOffsetHeightPlusMargin = (el) => {
-    if (!el) return 0;
-    const elStyle = getComputedStyle(el);
-    if (
-        elStyle.display === "none" ||
-        elStyle.position === "absolute" ||
-        elStyle.position === "fixed"
-    )
-        return 0;
-
-    const topMargin = parseFloat(elStyle.getPropertyValue("margin-top"));
-    const bottomMargin = parseFloat(elStyle.getPropertyValue("margin-bottom"));
-    return el.offsetHeight + topMargin + bottomMargin;
-};
-
-const getOffsetWidthPlusMargin = (el) => {
-    if (!el) return 0;
-    let elStyle = getComputedStyle(el);
-    const leftMargin = parseFloat(elStyle.getPropertyValue("margin-left"));
-    const rightMargin = parseFloat(elStyle.getPropertyValue("margin-right"));
-    return el.offsetWidth + leftMargin + rightMargin;
-};
-
-const getElementSiblings = (element) => {
-    const allSiblings = Array.from(element.parentNode.children).filter(
-        (sibling) => sibling !== element
-    );
-    return allSiblings;
-};
-
-const getSiblingsHeight = (el) => {
-    const siblingsEls = getElementSiblings(el);
-
-    let siblingsHeight = 0;
-    for (const sibEl of siblingsEls) {
-        siblingsHeight += getOffsetHeightPlusMargin(sibEl);
-    }
-
-    return siblingsHeight;
-};
-const getHandHolderSiblingsHeight = (seatEl) => {
-    // return combined height of all elements besides hand-holder, which are not display:none or position:absolute
-
-    return getSiblingsHeight(seatEl.querySelector(".hand-holder"));
-};
-
-const getSeatChildrenWidthBesidesHandHolder = (seatEl) => {
-    // return combined height of all elements besides hand-holder, which are not display:none or position:absolute
-
-    const handHolderSiblings = getElementSiblings(
-        seatEl.querySelector(".hand-holder")
-    );
-
-    let siblingsWidth = 0;
-    for (const sibEl of handHolderSiblings) {
-        siblingsWidth += getOffsetWidthPlusMargin(sibEl);
-    }
-
-    return siblingsWidth;
+    return widestWord;
 };
 
 const getBorderAndPadding = (el) => {
@@ -411,7 +276,7 @@ const doCardsFitLayout = (
 
     // gapSize has to agree with the css!
     const gapSize = cardWidth * 0.1;
-    
+    console.log("gapSize:", gapSize);
     const cardHeight = cardWidth * 1.4;
     const acrossAndDown = getCardsAcrossAndNumRows({
         numCards,
@@ -491,15 +356,6 @@ const resizeCards = (seatElsAr) => {
     Also, determine if cards fit better with horizontal seat content layout vs default vertical layout
     */
 
-    // elements we'll want reference to
-    const cardTableEl = document.getElementById("card-table");
-    const cardTableBorderAndPadding = getBorderAndPadding(cardTableEl);
-    const cardTableMargins = getElementMargins(cardTableEl);
-    const cardTableBorderPaddingMarginVertical =
-        cardTableBorderAndPadding.vertical + cardTableMargins.vertical;
-    const cardTableBorderPaddingMarginHorizontal =
-        cardTableBorderAndPadding.horizontal + cardTableMargins.horizontal;
-
     const minCardWidth = 30;
     const maxCardWidth = 130;
     const minCardHeight = minCardWidth * 1.4;
@@ -518,233 +374,155 @@ const resizeCards = (seatElsAr) => {
     const pxPerVh = windowHeight / 100;
     const pxPerVw = windowWidth / 100;
 
-    // How much height can opponent seats take up?
-    const totalTargetOpponentsHeightVh = 65; // vh
-    const totalTargetOpponentsHeightPx =
-        pxPerVh * totalTargetOpponentsHeightVh -
-        cardTableBorderPaddingMarginVertical;
-    const maxOpponentSeatHeightPx =
-        totalTargetOpponentsHeightPx / opponentRows.length;
+    // How much height should opponent seats take up?
+    const totalTargetOpponentsHeight = 65; // vh
+    const maxOpponentSeatVh = Math.floor(
+        totalTargetOpponentsHeight / opponentRows.length
+    );
+    const maxOpponentSeatHeightPx = pxPerVh * maxOpponentSeatVh;
 
-    // How much height can client player seat take up?
-    const maxClientSeatHeightPx = windowHeight - totalTargetOpponentsHeightPx;
+    // How much height does this leave for opponent seat's .cards?
+    const maxOpponentCardsHeightPx =
+        maxOpponentSeatHeightPx -
+        seatsEls[0].querySelector(".buttons").offsetHeight -
+        getBorderAndPadding(opponentSeatsEls[0]).vertical;
 
-    // This will individually size each seat's cards
+    // DMR - 6/7/2025 - in mega-poker, make adjustments for seat elements like we do here for ".buttons".  eg. countdown meter etc etc.
+
+    // Same height allowances for client player
+    const maxClientSeatHeightPx = pxPerVh * (100 - totalTargetOpponentsHeight);
+    const maxClientCardsHeightPx =
+        maxClientSeatHeightPx -
+        seatsEls
+            .find((sel) => sel.classList.contains("client-player"))
+            ?.querySelector(".buttons")?.offsetHeight -
+        getBorderAndPadding(clientSeatEl)?.vertical;
+
+    // This will individually size each opponent's cards
     let verticalLayoutCardsInnerWidth,
-        verticalLayoutCardsInnerHeight,
+        verticalLayoutCardsHeight,
         horizontalLayoutCardsInnerWidth,
-        horizontalLayoutCardsInnerHeight;
+        horizontalLayoutCardsHeight;
 
     let seatNum = 0;
     for (const seatEl of seatsEls) {
         console.log("\n\r   seatNum:", seatNum);
-        console.log("seatEl:", seatEl);
         seatNum++;
-
         const isCommunity = seatEl.classList.contains("pot-area");
         const isClientPlayer = seatEl.classList.contains("client-player");
 
         // Get borders and padding for accurate measurement estimates
         const seatBordersAndPadding = getBorderAndPadding(seatEl);
-        const seatMargins = getElementMargins(seatEl);
-
-        // Handholder borders, padding, margins
-        // HandHolder width (holds .cards, .top-info, .bottom-info)
-        const handHolderEl = seatEl.querySelector(".hand-holder");
-        const handHolderBordersAndPadding = getBorderAndPadding(handHolderEl);
-        const handHolderMargins = getElementMargins(handHolderEl);
-
-        // .cards element
-        const cardsEl = seatEl.querySelector(".cards");
-        const cardsBordersAndPadding = getBorderAndPadding(cardsEl);
-        const cardsMargins = getElementMargins(cardsEl);
-        const cardsBordersPaddingMargins = {
-            horizontal:
-                cardsBordersAndPadding.horizontal + cardsMargins.horizontal,
-            vertical: cardsBordersAndPadding.vertical + cardsMargins.vertical,
-        };
-
-        // console.log("cardsBordersPaddingMargins:", cardsBordersPaddingMargins);
 
         // We are calculating sizes, not measuring elements
 
         // Calculate seat width
-        const seatWidth = isClientPlayer
-            ? windowWidth - cardTableBorderPaddingMarginHorizontal
-            : (windowWidth - cardTableBorderPaddingMarginHorizontal) /
-              opponentColumns.length;
+        const seatOuterWidth = isClientPlayer
+            ? windowWidth
+            : windowWidth / opponentColumns.length;
 
-        // console.log(
-        //     "seatWidth = windowWidth / opponentColumns.length",
-        //     `${seatWidth} = ${windowWidth} / ${opponentColumns.length}`
-        // );
+        console.log(
+            "seatOuterWidth = windowWidth / opponentColumns.length",
+            `${seatOuterWidth} = ${windowWidth} / ${opponentColumns.length}`
+        );
 
+        // HandHolder width (holds .cards, .top-info, .bottom-info)
+        const seatHandHolderBordersAndPadding = getBorderAndPadding(
+            seatEl.querySelector(".hand-holder")
+        );
         const seatHandHolderInnerWidth =
-            seatWidth -
+            seatOuterWidth -
             seatBordersAndPadding.horizontal -
-            seatMargins.horizontal -
-            handHolderBordersAndPadding.horizontal -
-            handHolderMargins.horizontal;
+            seatHandHolderBordersAndPadding.horizontal;
 
-        // console.log(
-        //     "seatHandHolderInnerWidth = \n\rseatWidth\n\r - seatBordersAndPadding.horizontal \n\r - seatMargins.horizontal\n\r - handHolderBordersAndPadding.horizontal \n\r- handHolderMargins.horizontal",
-        //     `\n\r${seatHandHolderInnerWidth} = \n\r${seatWidth}\n\r - ${seatBordersAndPadding.horizontal}\n\r - ${seatMargins.horizontal}\n\r - ${handHolderBordersAndPadding.horizontal}\n\r - ${handHolderMargins.horizontal}`
-        // );
+        console.log(
+            "seatHandHolderInnerWidth = \n\rseatOuterWidth\n\r - seatBordersAndPadding.horizontal\n\r - seatHandHolderBordersAndPadding.horizontal",
+            `\n\r${seatHandHolderInnerWidth} = \n\r${seatOuterWidth}\n\r - ${seatBordersAndPadding.horizontal}\n\r - ${seatHandHolderBordersAndPadding.horizontal}`
+        );
 
-        // this needs to be per-seat, because name, hand-name etc will be different
-        const maxSeatHeightPx = isClientPlayer
-            ? maxClientSeatHeightPx
-            : maxOpponentSeatHeightPx;
-
-        const maxCardsHeightPxWithoutInfos =
-            maxSeatHeightPx -
-            getHandHolderSiblingsHeight(seatEl) -
-            seatBordersAndPadding.vertical -
-            handHolderBordersAndPadding.vertical -
-            handHolderMargins.vertical -
-            cardsBordersPaddingMargins.vertical;
-
-        // console.log(
-        //     "maxCardsHeightPxWithoutInfos = \n\rmaxSeatHeightPx \n\r- getHandHolderSiblingsHeight(seatEl) \n\r- seatBordersAndPadding.vertical \n\r- handHolderBordersAndPadding.vertical \n\r- handHolderMargins.vertical \n\r- cardsBordersPaddingMargins.vertical",
-        //     `\n\r${maxCardsHeightPxWithoutInfos} = \n\r${maxSeatHeightPx} \n\r- ${getHandHolderSiblingsHeight(
-        //         seatEl
-        //     )} \n\r- ${seatBordersAndPadding.vertical} \n\r- ${
-        //         handHolderBordersAndPadding.vertical
-        //     } \n\r- ${handHolderMargins.vertical} \n\r- ${
-        //         cardsBordersPaddingMargins.vertical
-        //     }`
-        // );
-
-        // const maxOpponentCardsHeightPx =
-        //     maxOpponentSeatHeightPx -
-        //     seatsEls[0].querySelector(".buttons").offsetHeight -
-        //     getBorderAndPadding(opponentSeatsEls[0]).vertical;
-
-        // const maxClientCardsHeightPx =
-        //     maxClientSeatHeightPx -
-        //     seatsEls
-        //         .find((sel) => sel.classList.contains("client-player"))
-        //         ?.querySelector(".buttons")?.offsetHeight -
-        //     getBorderAndPadding(clientSeatEl)?.vertical;
+        // .cards element
+        const cardsEl = seatEl.querySelector(".cards");
+        const cardsBordersAndPadding = getBorderAndPadding(cardsEl);
 
         const numCards = seatEl.querySelectorAll(".card").length;
-        if (numCards < 1) continue;
+        if (numCards < 1) return;
 
         if (isCommunity) {
-            // DMR 2025-06-11 - rebuild community cards space calculations
-
             // Community Seat
             console.log("COMMUNITY SEAT");
             horizontalLayoutCardsInnerWidth =
-                seatHandHolderInnerWidth -
-                cardsBordersPaddingMargins.horizontal;
+                seatHandHolderInnerWidth - cardsBordersAndPadding.horizontal;
             verticalLayoutCardsInnerWidth =
-                seatHandHolderInnerWidth -
-                cardsBordersPaddingMargins.horizontal;
+                seatHandHolderInnerWidth - cardsBordersAndPadding.horizontal;
             // How much height to allow for cards element
-            const cardSpaceHeight = maxCardsHeightPxWithoutInfos;
+            const cardSpaceHeight =
+                maxOpponentCardsHeightPx - cardsBordersAndPadding.vertical;
 
             // seatEl.clientHeight -
             // seatEl.querySelector(".title").offsetHeight -
             // seatEl.querySelector(".pot-amount").offsetHeight;
-            horizontalLayoutCardsInnerHeight = cardSpaceHeight;
-            verticalLayoutCardsInnerHeight = cardSpaceHeight;
+            horizontalLayoutCardsHeight = cardSpaceHeight;
+            verticalLayoutCardsHeight = cardSpaceHeight;
         } else {
-            // How much height does this leave for seat's .cards?
-
-            // Vertical Layout cards space
-            // cards height room = seat height - hand-holder siblings' height - top-info height - bottom-info height
-            // cards width room = seat width - top-info width - bottom-info width
-
             // Opponent or Client Seat
-            // const maxCardsHeightPxWithoutInfos = isClientPlayer
-            //     ? maxClientCardsHeightPx
-            //     : maxOpponentCardsHeightPx;
+            const maxCardsHeightPx = isClientPlayer
+                ? maxClientCardsHeightPx
+                : maxOpponentCardsHeightPx;
 
             // DMR 06/07/2025 - top and bottom info elements' dimensions could change if we adjust font-size and content text.  Avoid feedback-loop.
             const topInfoEl = seatEl.querySelector(".top-info");
-            const topInfoMargins = getElementMargins(topInfoEl);
-            const topInfoWidth =
-                getWidestWordWidth(topInfoEl) + topInfoMargins.horizontal;
-            // console.log(
-            //     "topInfoWidth = \n\rgetWidestWordWidth(topInfoEl)\n\r + topInfoMargins.horizontal",
-            //     `\n\r${topInfoWidth} = \n\r${getWidestWordWidth(
-            //         topInfoEl
-            //     )}\n\r + ${topInfoMargins.horizontal}`
-            // );
-            const topInfoHeight =
-                topInfoEl.offsetHeight + topInfoMargins.vertical;
+            const topInfoWidth = topInfoEl.offsetWidth;
+            const topInfoHeight = topInfoEl.offsetHeight;
 
             const bottomInfoEl = seatEl.querySelector(".bottom-info");
-            const bottomInfoMargins = getElementMargins(bottomInfoEl);
-            const bottomInfoWidth =
-                getWidestWordWidth(bottomInfoEl) + bottomInfoMargins.horizontal;
-            const bottomInfoHeight =
-                bottomInfoEl.offsetHeight + bottomInfoMargins.vertical;
+            const bottomInfoWidth = bottomInfoEl.offsetWidth;
+            const bottomInfoHeight = bottomInfoEl.offsetHeight;
 
             // horizontal card space is width left for cards if seat is set to horizontal layout
+
             horizontalLayoutCardsInnerWidth =
                 seatHandHolderInnerWidth -
                 topInfoWidth -
                 bottomInfoWidth -
-                cardsBordersPaddingMargins.horizontal;
-            // console.log(
-            //     "horizontalLayoutCardsInnerWidth = \n\r seatHandHolderInnerWidth\n\r  - topInfoWidth\n\r  - bottomInfoWidth\n\r  - cardsBordersPaddingMargins.horizontal ... ",
-            //     `\n\r ${horizontalLayoutCardsInnerWidth} = \n\r ${seatHandHolderInnerWidth}\n\r  - ${topInfoWidth}\n\r  - ${bottomInfoWidth}\n\r  - ${cardsBordersPaddingMargins.horizontal}`
-            // );
-
-            horizontalLayoutCardsInnerHeight = maxCardsHeightPxWithoutInfos;
-            // console.log(
-            //     " horizontalLayoutCardsInnerHeight = \n\rmaxCardsHeightPxWithoutInfos",
-            //     `\n\r${horizontalLayoutCardsInnerHeight} = \n\r${maxCardsHeightPxWithoutInfos}`
-            // );
+                cardsBordersAndPadding.horizontal;
+            horizontalLayoutCardsHeight =
+                maxCardsHeightPx - cardsBordersAndPadding.horizontal;
 
             // vertical card space is width left for cards if seat is set to vertical layout
             verticalLayoutCardsInnerWidth =
-                seatHandHolderInnerWidth -
-                cardsBordersPaddingMargins.horizontal;
+                seatHandHolderInnerWidth - cardsBordersAndPadding.horizontal;
+            verticalLayoutCardsHeight =
+                maxCardsHeightPx - topInfoHeight - bottomInfoHeight;
+            console.log(
+                "horizontalLayoutCardsInnerWidth = \n\r seatHandHolderInnerWidth\n\r  - topInfoWidth\n\r  - bottomInfoWidth\n\r  - cardsBordersAndPadding.horizontal ... ",
+                `\n\r ${horizontalLayoutCardsInnerWidth} = \n\r ${seatHandHolderInnerWidth}\n\r  - ${topInfoWidth}\n\r  - ${bottomInfoWidth}\n\r  - ${cardsBordersAndPadding.horizontal}`
+            );
             // console.log(
-            //     "\n\rverticalLayoutCardsInnerWidth = seatHandHolderInnerWidth - cardsBordersPaddingMargins.horizontal",
-            //     `\n\r${verticalLayoutCardsInnerWidth} = \n\r${seatHandHolderInnerWidth} \n\r- ${cardsBordersPaddingMargins.horizontal}`
+            //     "horizontalLayoutCardsInnerWidth:",
+            //     horizontalLayoutCardsInnerWidth,
+            //     "seatHandHolderInnerWidth:",
+            //     seatHandHolderInnerWidth,
+            //     "topInfoWidth:",
+            //     topInfoWidth,
+            //     "bottomInfoWidth:",
+            //     bottomInfoWidth
             // );
-            verticalLayoutCardsInnerHeight =
-                maxCardsHeightPxWithoutInfos - topInfoHeight - bottomInfoHeight;
-            // console.log(
-            //     "verticalLayoutCardsInnerHeight =\n\r maxCardsHeightPxWithoutInfos \n\r- topInfoHeight \n\r- bottomInfoHeight",
-            //     `\n\r${verticalLayoutCardsInnerHeight} = \n\r${maxCardsHeightPxWithoutInfos} \n\r- ${topInfoHeight} \n\r- ${bottomInfoHeight}`
-            // );
-            horizontalLayoutCardsInnerHeight = Math.max(
-                0,
-                horizontalLayoutCardsInnerHeight
-            );
-            horizontalLayoutCardsInnerWidth = Math.max(
-                0,
-                horizontalLayoutCardsInnerWidth
-            );
-            verticalLayoutCardsInnerWidth = Math.max(
-                0,
-                verticalLayoutCardsInnerWidth
-            );
-            verticalLayoutCardsInnerHeight = Math.max(
-                0,
-                verticalLayoutCardsInnerHeight
-            );
 
             // console.log(
             //     "verticalLayoutCardsInnerWidth:",
             //     verticalLayoutCardsInnerWidth
             // );
             // console.log(
-            //     "verticalLayoutCardsInnerHeight = maxOpponentSeatHeightPx - topInfoHeight - bottomInfoHeight | ",
-            //     `${verticalLayoutCardsInnerHeight} =
-            //     ${maxCardsHeightPxWithoutInfos} - ${topInfoHeight} - ${bottomInfoHeight}`
+            //     "verticalLayoutCardsHeight = maxOpponentSeatHeightPx - topInfoHeight - bottomInfoHeight | ",
+            //     `${verticalLayoutCardsHeight} =
+            //     ${maxCardsHeightPx} - ${topInfoHeight} - ${bottomInfoHeight}`
             // );
         }
 
         // Starting with biggest card size, see if it fits in either layout.
         // then, reduce it by steps until we find a layout where it fits.
         // if it won't fit in either layout at minimum size,
-        // (?) increase totalTargetOpponentsHeightVh? up to 85% ?
+        // (?) increase totalTargetOpponentsHeight? up to 85% ?
 
         let cardWidth = maxCardWidth;
         let cardsFitVertical = false;
@@ -762,7 +540,7 @@ const resizeCards = (seatElsAr) => {
                 numCards,
                 cardWidth,
                 verticalLayoutCardsInnerWidth,
-                verticalLayoutCardsInnerHeight
+                verticalLayoutCardsHeight
             );
             if (cardsFitVertical) {
                 console.log("CARDS FIT VERTICAL", cardWidth);
@@ -774,7 +552,7 @@ const resizeCards = (seatElsAr) => {
                 numCards,
                 cardWidth,
                 horizontalLayoutCardsInnerWidth,
-                horizontalLayoutCardsInnerHeight
+                horizontalLayoutCardsHeight
             );
 
             if (cardsFitHorizontal) {
@@ -792,19 +570,16 @@ const resizeCards = (seatElsAr) => {
             cardWidth -= 5;
         }
         const cardSize = cardWidth / pxPerVw + "vw";
-
-        // console.log(
-        //     "cardSize = cardWidth / pxPerVw | ",
-        //     `${cardSize} = ${cardWidth} / ${pxPerVw}`
-        // );
+        console.log(
+            "cardSize = cardWidth / pxPerVw | ",
+            `${cardSize} = ${cardWidth} / ${pxPerVw}`
+        );
 
         // acrossAndNumRows.numRows
         // acrossAndNumRows.cardsAcross
 
         // set seat's card width
         seatEl.style.setProperty("--card-width", cardSize);
-        // legacy unit
-        seatEl.style.setProperty("--card-unit", cardWidth / 6 / pxPerVw + "vw");
 
         // set seat layout
         if (makeHorizontal) {
@@ -819,8 +594,8 @@ const resizeCards = (seatElsAr) => {
             ? horizontalLayoutCardsInnerWidth
             : verticalLayoutCardsInnerWidth;
         const heightAvailable = makeHorizontal
-            ? horizontalLayoutCardsInnerHeight
-            : verticalLayoutCardsInnerHeight;
+            ? horizontalLayoutCardsHeight
+            : verticalLayoutCardsHeight;
         const acrossAndNumRows = getCardsAcrossAndNumRows({
             numCards,
             cardWidth,
@@ -828,25 +603,6 @@ const resizeCards = (seatElsAr) => {
             widthAvailable,
             heightAvailable,
         });
-
-        const actualCardsRows = getNumberOfRows(cardsEl);
-
-        if (actualCardsRows !== acrossAndNumRows.numRows) {
-            console.log("actualCardsRows vs acrossAndNumRows.numRows:",actualCardsRows,acrossAndNumRows.numRows)
-            console.log(
-                "horizontalLayout:",
-                horizontalLayoutCardsInnerWidth,
-                horizontalLayoutCardsInnerHeight,
-                "\n\rverticalLayout:",
-                verticalLayoutCardsInnerWidth,
-                verticalLayoutCardsInnerHeight,
-                "\n\cardSize:",
-                cardSize,
-                "\n\rcards:",
-                cardsEl.clientWidth,
-                cardsEl.clientHeight
-            );
-        }
 
         seatEl.querySelector(".size-display").innerHTML = `rows: ${
             acrossAndNumRows.numRows

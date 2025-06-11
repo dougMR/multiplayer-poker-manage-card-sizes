@@ -23,6 +23,7 @@ body {
 .hand-name {
     /* font-size: min(36px, calc(10px + var(--card-width) * 0.1));
     margin: 0; */
+    margin:0;
     font-size: 1em;
 }
 .hand-name {
@@ -117,8 +118,8 @@ body {
     justify-items: stretch;
     align-content: space-between;
     /* align-items: stretch; */
-    grid-template-columns: 33.3% 33.3% 33.3%;
-    /* grid-template-columns: repeat(3, minmax(min-content, auto)); */
+    /* grid-template-columns: 33.3% 33.3% 33.3%; */
+    grid-template-columns: repeat(3, minmax(min-content, auto));
     /* grid-template-rows: 1fr 1fr 1fr 2fr; */
     /* grid-template-rows: repeat(3, minmax(0px, 2fr)) 3fr; */
     grid-template-rows: repeat(3, minmax(min-content, 1fr)) minmax(
@@ -151,7 +152,6 @@ body {
     /* container-type: inline-size;
     container-name: seat; */
 
-    box-sizing: border-box;
     width: auto;
     height: auto;
     display: flex;
@@ -194,6 +194,7 @@ body {
         & .bottom-info {
             /* border:1px solid red; */
             & .size-display {
+                font-family: monospace;
                 font-size: 0.7em;
                 /* border: 1px solid orange; */
                 background-color: #ffccaa;
